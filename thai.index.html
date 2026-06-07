@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภาษาไทย · 泰文學習工具</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --red: #B5372A;
+    --cream: #FAF6EE;
+    --dark: #1A1208;
+    --mid: #3D2B0E;
+    --border: rgba(201,168,76,0.3);
+    --shadow: 0 8px 40px rgba(26,18,8,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Noto Serif TC', serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 90%, rgba(181,55,42,0.06) 0%, transparent 60%);
+  }
+
+  header {
+    text-align: center;
+    padding: 48px 24px 32px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 2px;
+    background: var(--gold);
+  }
+
+  .logo-thai {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--mid);
+    line-height: 1.2;
+  }
+  h1 span { color: var(--gold); font-weight: 600; }
+  .subtitle {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #8a7455;
+    letter-spacing: 1px;
+  }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── Input Section ── */
+  .input-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 32px;
+  }
+
+  .input-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Sarabun', sans-serif;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .lang-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .lang-tab {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    color: #8a7455;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lang-tab.active {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+  .lang-tab:hover:not(.active) {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .input-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  textarea {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Sarabun', 'Noto Serif TC', sans-serif;
+    font-size: 16px;
+    color: var(--dark);
+    background: var(--cream);
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.6;
+  }
+  textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+  }
+  textarea::placeholder { color: #c0b090; }
+
+  .btn-translate {
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0 28px;
+    height: 80px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .btn-translate:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,168,76,0.4); }
+  .btn-translate:active { transform: translateY(0); }
+  .btn-translate:disabled { background: #d4c49a; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .quick-phrases {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .quick-label {
+    font-size: 11px;
+    color: #9a8060;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Sarabun', sans-serif;
+    margin-right: 4px;
+  }
+  .quick-chip {
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.18s;
+    background: white;
+  }
+  .quick-chip:hover {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+  }
+
+  /* ── Results ── */
+  #results {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    animation: slideUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--mid) 0%, #2a1a06 100%);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-source {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-family: 'Sarabun', sans-serif;
+    letter-spacing: 1px;
+  }
+  .card-original {
+    color: white;
+    font-size: 18px;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  .copy-btn {
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Sarabun', sans-serif;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+  .copy-btn:hover { background: rgba(201,168,76,0.35); }
+
+  .card-body { padding: 22px 24px; }
+
+  .thai-main {
+    font-family: 'Sarabun', sans-serif;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 600;
+    color: var(--mid);
+    line-height: 1.4;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .romanized {
+    font-size: 16px;
+    color: var(--red);
+    font-family: 'Sarabun', sans-serif;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  .breakdown-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Sarabun', sans-serif;
+    margin-bottom: 12px;
+  }
+
+  .words-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .word-pill {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: center;
+  }
+  .word-thai {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--mid);
+    display: block;
+  }
+  .word-rom {
+    font-size: 11px;
+    color: var(--red);
+    font-family: 'Sarabun', sans-serif;
+    display: block;
+    margin-top: 2px;
+  }
+  .word-meaning {
+    font-size: 11px;
+    color: #8a7455;
+    display: block;
+    margin-top: 1px;
+  }
+
+  .notes-box {
+    background: rgba(201,168,76,0.06);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.6;
+  }
+  .notes-box strong { color: var(--gold); }
+
+  .speak-btn {
+    margin-top: 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    color: var(--mid);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .speak-btn:hover { background: var(--cream); border-color: var(--gold); color: var(--gold); }
+
+  /* Loading */
+  .loading-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text {
+    font-family: 'Sarabun', sans-serif;
+    color: #8a7455;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #c0b090;
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 14px; line-height: 1.7; }
+
+  /* History sidebar feel via horizontal scroll */
+  .history-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .history-chip {
+    flex-shrink: 0;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--mid);
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .history-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .history-section { display: none; }
+  .history-section.has-items { display: block; }
+  .history-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #9a8060;
+    font-family: 'Sarabun', sans-serif;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .input-row { flex-direction: column; }
+    .btn-translate { width: 100%; height: 48px; }
+    textarea { min-height: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-thai">ภาษาไทย</div>
+  <h1>泰文<span>學習</span>工具</h1>
+  <div class="subtitle">輸入任何中文或英文 · 即時翻譯成泰文</div>
+</header>
+
+<main>
+
+  <!-- Input -->
+  <div class="input-section">
+    <span class="input-label">選擇輸入語言</span>
+    <div class="lang-tabs">
+      <button class="lang-tab active" data-lang="zh">中文</button>
+      <button class="lang-tab" data-lang="en">English</button>
+    </div>
+
+    <div class="input-row">
+      <textarea id="inputText" placeholder="輸入你想翻譯的句子，例如：我想要一杯咖啡…" rows="3"></textarea>
+      <button class="btn-translate" id="translateBtn" onclick="doTranslate()">
+        翻譯<br>แปล
+      </button>
+    </div>
+
+    <div class="quick-phrases" id="quickPhrases">
+      <span class="quick-label">快速</span>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-section" id="historySection">
+    <div class="history-label">最近翻譯</div>
+    <div class="history-strip" id="historyStrip"></div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="empty-state">
+      <div class="empty-icon">🇹🇭</div>
+      <p>在上方輸入任何句子<br>AI 會幫你翻譯成泰文，並提供羅馬拼音和單字解析</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const QUICK_ZH = ['你好', '謝謝', '多少錢？', '廁所在哪裡？', '我不吃辣', '好吃！', '幫我叫計程車', '我迷路了'];
+const QUICK_EN = ['Hello', 'Thank you', 'How much?', 'Where is the toilet?', 'No spicy please', 'Delicious!', 'Call me a taxi', 'I am lost'];
+
+let currentLang = 'zh';
+let history = [];
+
+function renderQuickPhrases() {
+  const list = currentLang === 'zh' ? QUICK_ZH : QUICK_EN;
+  const container = document.getElementById('quickPhrases');
+  container.innerHTML = `<span class="quick-label">快速</span>`;
+  list.forEach(p => {
+    const chip = document.createElement('button');
+    chip.className = 'quick-chip';
+    chip.textContent = p;
+    chip.onclick = () => {
+      document.getElementById('inputText').value = p;
+      doTranslate();
+    };
+    container.appendChild(chip);
+  });
+}
+
+document.querySelectorAll('.lang-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentLang = tab.dataset.lang;
+    const ta = document.getElementById('inputText');
+    ta.placeholder = currentLang === 'zh' ? '輸入你想翻譯的句子，例如：我想要一杯咖啡…' : 'Enter a sentence, e.g. I would like a coffee…';
+    renderQuickPhrases();
+  });
+});
+
+document.getElementById('inputText').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) doTranslate();
+});
+
+function addHistory(text) {
+  history = [text, ...history.filter(h => h !== text)].slice(0, 8);
+  const section = document.getElementById('historySection');
+  const strip = document.getElementById('historyStrip');
+  section.className = 'history-section has-items';
+  strip.innerHTML = '';
+  history.forEach(h => {
+    const chip = document.createElement('div');
+    chip.className = 'history-chip';
+    chip.textContent = h;
+    chip.title = h;
+    chip.onclick = () => {
+      document.getElementById('inputText').value = h;
+      doTranslate();
+    };
+    strip.appendChild(chip);
+  });
+}
+
+async function doTranslate() {
+  const input = document.getElementById('inputText').value.trim();
+  if (!input) return;
+
+  const btn = document.getElementById('translateBtn');
+  btn.disabled = true;
+  addHistory(input);
+
+  const results = document.getElementById('results');
+  results.innerHTML = `
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div class="loading-text">正在翻譯中... กำลังแปล...</div>
+    </div>`;
+
+  const sourceLang = currentLang === 'zh' ? '繁體中文' : 'English';
+
+  const prompt = `You are a Thai language expert. Translate the following ${sourceLang} text into Thai.
+
+Input text: "${input}"
+
+Respond ONLY with a valid JSON object, no markdown, no explanation, exactly this structure:
+{
+  "thai": "Thai translation here",
+  "romanized": "RTGS romanization / pronunciation guide",
+  "words": [
+    {"thai": "word", "romanized": "pronunciation", "meaning": "meaning in zh/en"}
+  ],
+  "notes": "1-2 sentences about tone, formality, or cultural tips. In Traditional Chinese."
+}
+
+Rules:
+- "words" should break down the key vocabulary (max 8 words)
+- meanings in the words array: use Traditional Chinese if source is Chinese, English if source is English
+- "notes" always in Traditional Chinese
+- Keep romanized as Thai Royal General System of Transcription (RTGS)`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content.map(i => i.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    renderCard(input, parsed);
+    btn.disabled = false;
+  } catch (err) {
+    results.innerHTML = `
+      <div class="loading-card">
+        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+        <div class="loading-text" style="color:#B5372A">翻譯失敗，請稍後再試<br><small style="opacity:0.6">${err.message}</small></div>
+      </div>`;
+    btn.disabled = false;
+  }
+}
+
+function renderCard(original, data) {
+  const results = document.getElementById('results');
+
+  const wordsHtml = (data.words || []).map(w => `
+    <div class="word-pill">
+      <span class="word-thai">${w.thai}</span>
+      <span class="word-rom">${w.romanized}</span>
+      <span class="word-meaning">${w.meaning}</span>
+    </div>`).join('');
+
+  results.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-source">原文 · ${currentLang === 'zh' ? '中文' : 'English'}</div>
+          <div class="card-original">${escapeHtml(original)}</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('${escapeAttr(data.thai)}')">複製泰文</button>
+      </div>
+      <div class="card-body">
+        <div class="thai-main">${data.thai}</div>
+        <div class="romanized">📢 ${data.romanized}</div>
+
+        <button class="speak-btn" onclick="speak('${escapeAttr(data.thai)}')">
+          🔊 朗讀泰文
+        </button>
+
+        ${wordsHtml ? `
+        <div class="divider"></div>
+        <div class="breakdown-title">單字解析</div>
+        <div class="words-grid">${wordsHtml}</div>` : ''}
+
+        ${data.notes ? `
+        <div class="notes-box">
+          <strong>學習提示</strong> · ${data.notes}
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'th-TH';
+  utterance.rate = 0.85;
+  speechSynthesis.speak(utterance);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if (btn) { btn.textContent = '✓ 已複製'; setTimeout(() => btn.textContent = '複製泰文', 2000); }
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeAttr(str) {
+  return str.replace(/'/g, "\\'").replace(/\n/g, ' ');
+}
+
+// Init
+renderQuickPhrases();
+</script>
+</body>
+</html>
